@@ -45,6 +45,8 @@ public:
 	//상하 회전 입력 처리
 	void LookUp(const struct FInputActionValue& inputValue);
 
+
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* ia_Move;
 	//이동속도

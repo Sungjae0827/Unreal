@@ -28,4 +28,8 @@ public:
 	// 플레이어가 공중에 떠 있는지 여부
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = PlayerAnim)
 	bool isInAir = false;
+
+	UPROPERTY(EditDefaultsOnly, Category=PlayerAnim)
+	class UAnimMontage* attackAnimMontage;
+	void PlayAttackAnim();
 };

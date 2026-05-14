@@ -10,6 +10,7 @@
 #include <Blueprint/UserWidget.h>
 #include <Kismet/GameplayStatics.h>
 #include "EnemyFSM.h"
+#include "PlayerAnim.h"
 
 // Sets default values
 ATPSPlayer::ATPSPlayer()
@@ -45,23 +46,27 @@ ATPSPlayer::ATPSPlayer()
 	JumpMaxCount = 2;
 
 	gunMeshcomp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunMeshComp"));
-	gunMeshcomp->SetupAttachment(GetMesh());
+	gunMeshcomp->SetupAttachment(GetMesh(), TEXT("hand_rSocket"));
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> TempGunMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Weapons/Pistol/Meshes/SKM_Pistol.SKM_Pistol'"));
 	if (TempGunMesh.Succeeded())
 	{
 		gunMeshcomp->SetSkeletalMesh(TempGunMesh.Object);
-		gunMeshcomp->SetRelativeLocation(FVector(-14, 52, 120));
+		gunMeshcomp->SetRelativeLocation(FVector(-17, 10, -3));
+		gunMeshcomp->SetRelativeRotation(FRotator(0, 90, 0));
 	}
 
 	//스나이퍼건 컴포넌트 등록
 	sniperGunComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SniperGunComp"));
 	// 부모 컴포넌트를 Mesh 컴포넌트로 변경
-	sniperGunComp->SetupAttachment(GetMesh());
+	sniperGunComp->SetupAttachment(GetMesh(), TEXT("hand_rSockt"));
 	ConstructorHelpers::FObjectFinder<UStaticMesh> TempSniperMesh(TEXT("StaticMesh / Script / Engine.StaticMesh'/Game/SniperGun/sniper11.sniper11'"));
 	if (TempSniperMesh.Succeeded())
 	{
 		sniperGunComp->SetStaticMesh(TempSniperMesh.Object);
-		sniperGunComp->SetRelativeLocation(FVector(-22, 55, 120));
+
+		sniperGunComp->SetRelativeLocation(FVector(-42, 7, 1));
+		sniperGunComp->SetRelativeRotation(FRotator(0, 90, 0));
+
 		sniperGunComp->SetRelativeScale3D(FVector(0.15f));
 	}
 }
@@ -152,6 +157,9 @@ void ATPSPlayer::SniperAim(const struct FInputActionValue& inputValue)
 #include "Bullet.h"
 void ATPSPlayer::InputFire(const struct FInputActionValue& inputValue)
 {
+	auto anim = Cast<UPlayerAnim>(GetMesh()->GetAnimInstance());
+	anim->PlayAttackAnim();
+
 	if (bUsingGrenadeGun)
 	{
 		//총알 발사 처리
